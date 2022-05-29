@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'Welcome.dart';
 import 'package:flutter/material.dart';
 import 'CreateUser.dart';
 
@@ -33,8 +34,8 @@ Widget cuerpo() {
             fit: BoxFit.cover)),
 */
     child: Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+      //mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         logo(),
         nombre(),
@@ -121,7 +122,10 @@ Widget botonEntrar() {
           backgroundColor: Colors.blueGrey,
           elevation: 15.0,
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: ((context) => const Welcome())));
+        },
         child: const Text('Ingresar'),
       ),
     );
