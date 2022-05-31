@@ -3,8 +3,22 @@
 import 'package:ant_eater/Login.dart';
 import 'package:flutter/material.dart';
 
-class CreateUser extends StatelessWidget {
+class CreateUser extends StatefulWidget {
   const CreateUser({Key? key}) : super(key: key);
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _CreateUser createState() => _CreateUser();
+}
+
+class _CreateUser extends State<CreateUser> {
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,12 +26,28 @@ class CreateUser extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Crear Usuario"),
       ),
-      body: cuerpo(),
+      body: cuerpo(myController),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                // Retrieve the text the that user has entered by using the
+                // TextEditingController.
+                content: Text(myController.text),
+              );
+            },
+          );
+        },
+        tooltip: 'Show me the value!',
+        child: const Icon(Icons.text_fields),
+      ),
     );
   }
 }
 
-Widget cuerpo() {
+Widget cuerpo(myController) {
   // ignore: avoid_unnecessary_containers
   return Container(
     child: Center(
@@ -28,7 +58,7 @@ Widget cuerpo() {
         const SizedBox(
           height: 15,
         ),
-        campoNombre(),
+        campoNombre(myController),
         // ignore: prefer_const_constructors
         SizedBox(
           height: 15,
@@ -65,13 +95,14 @@ Widget nombreRegistro() {
   );
 }
 
-Widget campoNombre() {
+Widget campoNombre(myController) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: const TextField(
+      child: TextField(
+        controller: myController,
         keyboardType: TextInputType.name,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           icon: Icon(Icons.person),
           labelText: "Nombre",
           fillColor: Colors.white,
