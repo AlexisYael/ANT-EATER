@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'Cuentas.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
@@ -12,17 +13,15 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   int _paginaActual = 0;
-  /*final List<Widget> _paginas = [
+  final List<Widget> _paginas = [
     //Páginas del Navigation Bar
     cuerpo(),
-  ];*/
+    const Cuentas(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Bienvenido"),
-      ),
-      body: cuerpo(), //_paginas[_paginaActual],
+      /*body: cuerpo(),*/ body: _paginas[_paginaActual],
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {

@@ -38,6 +38,9 @@ Widget cuerpo() {
       //mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         logo(),
+        const SizedBox(
+          height: 50,
+        ),
         nombre(),
         campoUsuario(),
         // ignore: prefer_const_constructors
@@ -61,10 +64,12 @@ Widget cuerpo() {
 }
 
 Widget nombre() {
-  return const Text(
-    "Iniciar Sesión",
-    style: TextStyle(
-        color: Colors.blueGrey, fontSize: 35.0, fontWeight: FontWeight.bold),
+  return const Center(
+    child: Text(
+      "Iniciar Sesión",
+      style: TextStyle(
+          color: Colors.blueGrey, fontSize: 35.0, fontWeight: FontWeight.bold),
+    ),
   );
 }
 
