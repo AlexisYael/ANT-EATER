@@ -1,7 +1,14 @@
 // ignore_for_file: file_names
 
 import 'package:ant_eater/Login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+FirebaseFirestore db = FirebaseFirestore.instance;
+String nombre = "";
+String edad = "";
+String correo = "";
+String pass = "";
 
 class CreateUser extends StatefulWidget {
   const CreateUser({Key? key}) : super(key: key);
@@ -12,11 +19,19 @@ class CreateUser extends StatefulWidget {
 }
 
 class _CreateUser extends State<CreateUser> {
-  final myController = TextEditingController();
+  //final myController = TextEditingController();
+  TextEditingController nombreController = TextEditingController();
+  TextEditingController edadController = TextEditingController();
+  TextEditingController correoController = TextEditingController();
+  TextEditingController passController = TextEditingController();
 
   @override
   void dispose() {
-    myController.dispose();
+    //  myController.dispose();
+    nombreController.dispose();
+    edadController.dispose();
+    correoController.dispose();
+    passController.dispose();
     super.dispose();
   }
 
@@ -26,7 +41,8 @@ class _CreateUser extends State<CreateUser> {
       appBar: AppBar(
         title: const Text("Crear Usuario"),
       ),
-      body: cuerpo(myController),
+      body: cuerpo(
+          nombreController, edadController, correoController, passController),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
@@ -35,7 +51,7 @@ class _CreateUser extends State<CreateUser> {
               return AlertDialog(
                 // Retrieve the text the that user has entered by using the
                 // TextEditingController.
-                content: Text(myController.text),
+                content: Text(nombreController.text),
               );
             },
           );
@@ -47,7 +63,8 @@ class _CreateUser extends State<CreateUser> {
   }
 }
 
-Widget cuerpo(myController) {
+Widget cuerpo(
+    nombreController, edadController, correoController, passController) {
   // ignore: avoid_unnecessary_containers
   return Container(
     child: Center(
@@ -58,24 +75,25 @@ Widget cuerpo(myController) {
         const SizedBox(
           height: 15,
         ),
-        campoNombre(myController),
+        campoNombre(nombreController),
         // ignore: prefer_const_constructors
         SizedBox(
           height: 15,
         ),
-        campoEdad(),
+        campoEdad(edadController),
         const SizedBox(
           height: 15,
         ),
-        campoUsuario(),
+        campoUsuario2(correoController),
         const SizedBox(
           height: 15,
         ),
-        campoContrasenia(),
+        campoContrasenia2(passController),
         const SizedBox(
           height: 15,
         ),
-        botonCrearCuenta(),
+        botonCrearCuenta(
+            nombreController, edadController, correoController, passController),
         const SizedBox(
           height: 15,
         ),
@@ -95,12 +113,16 @@ Widget nombreRegistro() {
   );
 }
 
-Widget campoNombre(myController) {
+Widget campoNombre(nombreController) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
-        controller: myController,
+        controller: nombreController,
+        //Agrega lo introducido al controller y lo asígna a la variable nombre
+        /* onChanged: (String value) async {
+          nombre = nombreController.toString();
+        },*/
         keyboardType: TextInputType.name,
         decoration: const InputDecoration(
           icon: Icon(Icons.person),
@@ -113,11 +135,15 @@ Widget campoNombre(myController) {
   });
 }
 
-Widget campoEdad() {
+Widget campoEdad(edadController) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 120),
-      child: const TextField(
+      child: TextField(
+        controller: edadController,
+        /* onChanged: (String value) async {
+          edad = edadController.text;
+        },*/
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           icon: Icon(Icons.cake),
@@ -130,7 +156,46 @@ Widget campoEdad() {
   });
 }
 
-Widget botonCrearCuenta() {
+Widget campoUsuario2(correoController) {
+  return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: TextField(
+        controller: correoController,
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          icon: Icon(Icons.email),
+          labelText: "Correo Electrónico",
+          hintText: "ejemplo@correo.com",
+          fillColor: Colors.white,
+          filled: true,
+        ),
+      ),
+    );
+  });
+}
+
+Widget campoContrasenia2(passController) {
+  return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: TextField(
+        controller: passController,
+        obscureText: true,
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          icon: Icon(Icons.lock),
+          labelText: "Contraseña",
+          fillColor: Colors.white,
+          filled: true,
+        ),
+      ),
+    );
+  });
+}
+
+Widget botonCrearCuenta(
+    nombreController, edadController, correoController, passController) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return SizedBox(
       child: TextButton(
@@ -141,7 +206,19 @@ Widget botonCrearCuenta() {
           backgroundColor: Colors.blueGrey,
           elevation: 15.0,
         ),
-        onPressed: () {},
+        onPressed: () {
+          final user = <String, dynamic>{
+            "nombre": nombreController.text,
+            "edad": edadController.text,
+            "correo": correoController.text,
+            "pass": passController.text
+          };
+          db.collection("usuarios").add(user).then((DocumentReference doc) =>
+              print('DocumentSnapshot added with ID: ${doc.id}'));
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: ((context) => const Inicio())));
+        },
         child: const Text('Crear'),
       ),
     );
