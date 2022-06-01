@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, depend_on_referenced_packages, avoid_print
 
 import 'package:ant_eater/Login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -145,8 +145,9 @@ Widget campoEdad(edadController) {
           edad = edadController.text;
         },*/
         keyboardType: TextInputType.number,
+        // ignore: prefer_const_constructors
         decoration: InputDecoration(
-          icon: Icon(Icons.cake),
+          icon: const Icon(Icons.cake),
           labelText: "Edad",
           fillColor: Colors.white,
           filled: true,
@@ -163,8 +164,9 @@ Widget campoUsuario2(correoController) {
       child: TextField(
         controller: correoController,
         keyboardType: TextInputType.emailAddress,
+        // ignore: prefer_const_constructors
         decoration: InputDecoration(
-          icon: Icon(Icons.email),
+          icon: const Icon(Icons.email),
           labelText: "Correo Electrónico",
           hintText: "ejemplo@correo.com",
           fillColor: Colors.white,
@@ -183,8 +185,9 @@ Widget campoContrasenia2(passController) {
         controller: passController,
         obscureText: true,
         keyboardType: TextInputType.emailAddress,
+        // ignore: prefer_const_constructors
         decoration: InputDecoration(
-          icon: Icon(Icons.lock),
+          icon: const Icon(Icons.lock),
           labelText: "Contraseña",
           fillColor: Colors.white,
           filled: true,

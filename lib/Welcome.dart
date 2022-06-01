@@ -1,8 +1,9 @@
 // ignore_for_file: file_names, no_leading_underscores_for_local_identifiers, depend_on_referenced_packages, unused_local_variable, unused_field
 
+import 'package:ant_eater/Ingresos.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'Cuentas.dart';
+import 'Egresos.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({Key? key}) : super(key: key);
@@ -16,7 +17,9 @@ class _WelcomeState extends State<Welcome> {
   final List<Widget> _paginas = [
     //Páginas del Navigation Bar
     cuerpo(),
-    const Cuentas(),
+    const Egresos(),
+    const Ingresos(),
+    //const Inicio(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -33,9 +36,11 @@ class _WelcomeState extends State<Welcome> {
         items: [
           const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           const BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money_outlined), label: "Cuentas"),
+              icon: Icon(Icons.attach_money_outlined), label: "Egresos"),
           const BottomNavigationBarItem(
-              icon: Icon(Icons.close_outlined), label: "Logout"),
+              icon: Icon(Icons.attach_money_outlined), label: "Ingresos"),
+          /*const BottomNavigationBarItem(
+              icon: Icon(Icons.close_outlined), label: "Logout"),*/
         ],
       ),
     );
@@ -69,24 +74,28 @@ Widget grafica() {
   late TooltipBehavior _tooltipBehavior;
   _chartData = getChartData();
   _tooltipBehavior = TooltipBehavior(enable: true);
-  return SfCircularChart(
-    title: ChartTitle(text: 'Egresos Mensuales'),
-    legend: Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
-    tooltipBehavior: _tooltipBehavior,
-    series: <CircularSeries>[
-      //PieSeries<Datos, String>( //Gráfica de Pastel
-      //DoughnutSeries<Datos, String>( //Grafica de Dona
-      RadialBarSeries<Datos, String>(
-          dataSource: _chartData,
-          xValueMapper: (Datos data, _) => data.categoria,
-          yValueMapper: (Datos data, _) => data.cantidad,
-          enableTooltip: true,
-          maximumValue: 10000, //Solo para la RadialBarSeries
-          // ignore: prefer_const_constructors
-          dataLabelSettings: DataLabelSettings(
-            isVisible: true,
-          ))
-    ],
+  return SizedBox(
+    height: 500,
+    child: SfCircularChart(
+      title: ChartTitle(text: 'Egresos Mensuales'),
+      legend:
+          Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+      tooltipBehavior: _tooltipBehavior,
+      series: <CircularSeries>[
+        //PieSeries<Datos, String>( //Gráfica de Pastel
+        //DoughnutSeries<Datos, String>( //Grafica de Dona
+        RadialBarSeries<Datos, String>(
+            dataSource: _chartData,
+            xValueMapper: (Datos data, _) => data.categoria,
+            yValueMapper: (Datos data, _) => data.cantidad,
+            enableTooltip: true,
+            maximumValue: 10000, //Solo para la RadialBarSeries
+            // ignore: prefer_const_constructors
+            dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+            ))
+      ],
+    ),
   );
 }
 

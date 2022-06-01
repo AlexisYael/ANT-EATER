@@ -1,15 +1,16 @@
 // ignore_for_file: file_names, avoid_unnecessary_containers, sort_child_properties_last, no_leading_underscores_for_local_identifiers, unused_local_variable
 
+import 'package:ant_eater/Ingresos.dart';
 import 'package:flutter/material.dart';
 
-class Cuentas extends StatefulWidget {
-  const Cuentas({Key? key}) : super(key: key);
+class Egresos extends StatefulWidget {
+  const Egresos({Key? key}) : super(key: key);
 
   @override
-  State<Cuentas> createState() => _CuentasState();
+  State<Egresos> createState() => _EgresosState();
 }
 
-class _CuentasState extends State<Cuentas> {
+class _EgresosState extends State<Egresos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +26,10 @@ Widget cuerpo() {
       children: <Widget>[
         const SizedBox(
           height: 100,
+        ),
+        titulo(),
+        const SizedBox(
+          height: 20,
         ),
         categoria(),
         const SizedBox(
@@ -52,10 +57,13 @@ Widget cuerpo() {
   );
 }
 
-Widget menu() {
-  //aun falta
-  return Container(
-    child: Column(),
+Widget titulo() {
+  return const Center(
+    child: Text(
+      "EGRESOS",
+      style: TextStyle(
+          color: Colors.blueGrey, fontSize: 35.0, fontWeight: FontWeight.bold),
+    ),
   );
 }
 
@@ -187,7 +195,7 @@ Widget botonAgregar() {
           elevation: 15.0,
         ),
         onPressed: () {},
-        child: const Text('Agregar'),
+        child: const Text('Agregar Egreso'),
       ),
     );
   });

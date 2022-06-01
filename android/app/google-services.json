@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "258708743294",
+    "project_id": "ant-eater-7d2dc",
+    "storage_bucket": "ant-eater-7d2dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258708743294:android:8d02d8be12ba13a147642f",
+        "android_client_info": {
+          "package_name": "com.example.ant_eater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258708743294-1ahk5rd4mc8jiqtb2jve157ps5nf55mf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX_PpJO6wSTnfwNEzGX8zMROqD7UpGg4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258708743294-1ahk5rd4mc8jiqtb2jve157ps5nf55mf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "258708743294-bkm324k0aa41j5phcvmdae8k0mu8cm1q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.antEater"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
