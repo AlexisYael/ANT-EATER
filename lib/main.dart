@@ -1,8 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Login.dart';
 
-void main() =>
-    runApp(const MyApp()); //ejecuta el primer widget de la aplicación.
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
+  runApp(const MyApp()); //ejecuta el primer widget de la aplicación.
+}
 
 class MyApp extends StatelessWidget {
   //Constructor de widget con un MaterialApp "estilo de la aplicación"

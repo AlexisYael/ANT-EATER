@@ -5,10 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
-String nombre = "";
-String edad = "";
-String correo = "";
-String pass = "";
 
 class CreateUser extends StatefulWidget {
   const CreateUser({Key? key}) : super(key: key);
@@ -119,10 +115,6 @@ Widget campoNombre(nombreController) {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
         controller: nombreController,
-        //Agrega lo introducido al controller y lo asígna a la variable nombre
-        /* onChanged: (String value) async {
-          nombre = nombreController.toString();
-        },*/
         keyboardType: TextInputType.name,
         decoration: const InputDecoration(
           icon: Icon(Icons.person),
@@ -141,9 +133,6 @@ Widget campoEdad(edadController) {
       padding: const EdgeInsets.symmetric(horizontal: 120),
       child: TextField(
         controller: edadController,
-        /* onChanged: (String value) async {
-          edad = edadController.text;
-        },*/
         keyboardType: TextInputType.number,
         // ignore: prefer_const_constructors
         decoration: InputDecoration(
@@ -210,17 +199,38 @@ Widget botonCrearCuenta(
           elevation: 15.0,
         ),
         onPressed: () {
-          final user = <String, dynamic>{
-            "nombre": nombreController.text,
-            "edad": edadController.text,
-            "correo": correoController.text,
-            "pass": passController.text
-          };
-          db.collection("usuarios").add(user).then((DocumentReference doc) =>
-              print('DocumentSnapshot added with ID: ${doc.id}'));
+          if (nombreController.text == "" ||
+              edadController.text == "" ||
+              correoController == "" ||
+              passController == "") {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Atención"),
+                content: Text(
+                    "Por favor, ingrese la información en todos los campos."),
+                actions: [
+                  FlatButton(
+                      child: Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
+              ),
+            );
+          } else {
+            final user = <String, dynamic>{
+              "nombre": nombreController.text,
+              "edad": edadController.text,
+              "correo": correoController.text,
+              "pass": passController.text
+            };
+            db.collection("usuarios").add(user).then((DocumentReference doc) =>
+                print('DocumentSnapshot added with ID: ${doc.id}'));
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: ((context) => const Inicio())));
+            Navigator.push(context,
+                MaterialPageRoute(builder: ((context) => const Inicio())));
+          }
         },
         child: const Text('Crear'),
       ),
