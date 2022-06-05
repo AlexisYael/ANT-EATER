@@ -6,7 +6,10 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'Egresos.dart';
 
 class Welcome extends StatefulWidget {
-  const Welcome({Key? key}) : super(key: key);
+//  const Welcome({Key? key}) : super(key: key);
+  String cred;
+  Welcome(
+      this.cred); //Recibe la crendencial del usuario, quiero utilizarla para asociar los ingresos/egresos
 
   @override
   State<Welcome> createState() => _WelcomeState();
@@ -14,6 +17,8 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   int _paginaActual = 0;
+  late String cred = widget.cred;
+
   final List<Widget> _paginas = [
     //Páginas del Navigation Bar
     cuerpo(),

@@ -201,8 +201,8 @@ Widget botonCrearCuenta(
         onPressed: () {
           if (nombreController.text == "" ||
               edadController.text == "" ||
-              correoController == "" ||
-              passController == "") {
+              correoController.text == "" ||
+              passController.text == "") {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(

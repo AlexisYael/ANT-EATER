@@ -1,7 +1,11 @@
 // ignore_for_file: file_names, avoid_unnecessary_containers, sort_child_properties_last, no_leading_underscores_for_local_identifiers, unused_local_variable
 
 import 'package:ant_eater/Ingresos.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Egresos extends StatefulWidget {
   const Egresos({Key? key}) : super(key: key);
@@ -11,15 +15,29 @@ class Egresos extends StatefulWidget {
 }
 
 class _EgresosState extends State<Egresos> {
+  TextEditingController eg_desc_Ctrl = TextEditingController();
+  TextEditingController eg_cant_Ctrl = TextEditingController();
+  TextEditingController eg_prec_Ctrl = TextEditingController();
+  TextEditingController eg_total_Ctrl = TextEditingController();
+
+  @override
+  void dispose() {
+    eg_desc_Ctrl.dispose();
+    eg_cant_Ctrl.dispose();
+    eg_prec_Ctrl.dispose();
+    eg_total_Ctrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: cuerpo(),
+      body: cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl),
     );
   }
 }
 
-Widget cuerpo() {
+Widget cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
   return Container(
     child: Center(
         child: ListView(
@@ -35,23 +53,23 @@ Widget cuerpo() {
         const SizedBox(
           height: 15,
         ),
-        campoDescripcion(),
+        campoDescripcion(eg_desc_Ctrl),
         const SizedBox(
           height: 15,
         ),
-        campoCantidad(),
+        campoCantidad(eg_cant_Ctrl),
         const SizedBox(
           height: 15,
         ),
-        campoPrecio(),
+        campoPrecio(eg_prec_Ctrl),
         const SizedBox(
           height: 15,
         ),
-        campoTotal(),
+        campoTotal(eg_total_Ctrl),
         const SizedBox(
           height: 15,
         ),
-        botonAgregar(),
+        botonAgregar(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl),
       ],
     )),
   );
@@ -115,11 +133,12 @@ Widget categoria() {
   );
 }
 
-Widget campoDescripcion() {
+Widget campoDescripcion(eg_desc_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: const TextField(
+      child: TextField(
+        controller: eg_desc_Ctrl,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           icon: Icon(Icons.assignment),
@@ -132,11 +151,12 @@ Widget campoDescripcion() {
   });
 }
 
-Widget campoCantidad() {
+Widget campoCantidad(eg_cant_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 120),
-      child: const TextField(
+      child: TextField(
+        controller: eg_cant_Ctrl,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           icon: Icon(Icons.add_shopping_cart),
@@ -149,11 +169,12 @@ Widget campoCantidad() {
   });
 }
 
-Widget campoPrecio() {
+Widget campoPrecio(eg_prec_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 120),
-      child: const TextField(
+      child: TextField(
+        controller: eg_prec_Ctrl,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           icon: Icon(Icons.monetization_on_outlined),
@@ -166,11 +187,12 @@ Widget campoPrecio() {
   });
 }
 
-Widget campoTotal() {
+Widget campoTotal(eg_total_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 120),
-      child: const TextField(
+      child: TextField(
+        controller: eg_total_Ctrl,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           icon: Icon(Icons.monetization_on_outlined),
@@ -183,7 +205,7 @@ Widget campoTotal() {
   });
 }
 
-Widget botonAgregar() {
+Widget botonAgregar(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return SizedBox(
       child: TextButton(
@@ -194,7 +216,56 @@ Widget botonAgregar() {
           backgroundColor: Colors.blueGrey,
           elevation: 15.0,
         ),
-        onPressed: () {},
+        onPressed: () {
+          if (eg_desc_Ctrl.text == "" ||
+              eg_cant_Ctrl.text == "" ||
+              eg_prec_Ctrl.text == "" ||
+              eg_total_Ctrl.text == "") {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Atención"),
+                content: Text(
+                    "Por favor, ingrese la información en todos los campos."),
+                actions: [
+                  FlatButton(
+                      child: Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      })
+                ],
+              ),
+            );
+          } else {
+            final egreso = <String, dynamic>{
+              "descripcion": eg_desc_Ctrl.text,
+              "cantidad": eg_cant_Ctrl.text,
+              "precio": eg_prec_Ctrl.text,
+              "total": eg_total_Ctrl.text
+            };
+            db.collection("egresos").add(egreso).then((DocumentReference doc) =>
+                print('EGRESO added with ID: ${doc.id}'));
+
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("CORRECTO"),
+                content: Text("Se ha registrado el egreso."),
+                actions: [
+                  FlatButton(
+                      child: Text("Ok"),
+                      onPressed: () {
+                        eg_desc_Ctrl.clear();
+                        eg_cant_Ctrl.clear();
+                        eg_prec_Ctrl.clear();
+                        eg_total_Ctrl.clear();
+                        Navigator.of(context).pop();
+                      })
+                ],
+              ),
+            );
+          }
+        },
         child: const Text('Agregar Egreso'),
       ),
     );

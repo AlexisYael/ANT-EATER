@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:ant_eater/Ingresos.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'Welcome.dart';
@@ -163,6 +164,7 @@ Widget botonEntrar(correoCtrl, passCtrl) {
           } else {
             String credencial = "";
             String pass = "";
+
             await db.collection("usuarios").get().then((event) {
               for (var doc in event.docs) {
                 //print("${doc.id} => ${doc.data()}");
@@ -173,6 +175,7 @@ Widget botonEntrar(correoCtrl, passCtrl) {
                 }
               }
             });
+
             if (credencial == "") {
               showDialog(
                 context: context,
@@ -205,8 +208,12 @@ Widget botonEntrar(correoCtrl, passCtrl) {
                 ),
               );
             } else {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: ((context) => const Welcome())));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => Welcome(credencial))));
+              //builder:
+              //((context) => Ingresos());
             }
           } //else
         },
