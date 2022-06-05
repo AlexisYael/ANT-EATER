@@ -7,9 +7,9 @@ import 'Egresos.dart';
 
 class Welcome extends StatefulWidget {
 //  const Welcome({Key? key}) : super(key: key);
-  String cred;
-  Welcome(
-      this.cred); //Recibe la crendencial del usuario, quiero utilizarla para asociar los ingresos/egresos
+  //Recibe la crendencial del usuario, quiero utilizarla para asociar los ingresos/egresos
+  String cred, corr;
+  Welcome(this.cred, this.corr);
 
   @override
   State<Welcome> createState() => _WelcomeState();
@@ -18,18 +18,22 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   int _paginaActual = 0;
   late String cred = widget.cred;
+  late String corr = widget.corr;
 
-  final List<Widget> _paginas = [
+  /*final List<Widget> _paginas = [
     //Páginas del Navigation Bar
-    cuerpo(),
+    cuerpo(cred),
     const Egresos(),
     const Ingresos(),
     //const Inicio(),
-  ];
+  ];*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*body: cuerpo(),*/ body: _paginas[_paginaActual],
+      /*body: cuerpo(),*/
+      //body: _paginas[_paginaActual],
+      body: seleccionaPag(_paginaActual, cred, corr),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {
@@ -52,23 +56,33 @@ class _WelcomeState extends State<Welcome> {
   }
 }
 
-Widget cuerpo() {
+//Función para visualizar la pagina según el index.
+Widget seleccionaPag(_paginaActual, cred, corr) {
+  if (_paginaActual == 0) {
+    return cuerpo(cred);
+  } else if (_paginaActual == 1) {
+    return Egresos(corr);
+  } else
+    return Ingresos(corr);
+}
+
+Widget cuerpo(cred) {
   // ignore: avoid_unnecessary_containers
   return Container(
     child: Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        bienvenida(),
+        bienvenida(cred),
         grafica(),
       ],
     )),
   );
 }
 
-Widget bienvenida() {
-  return const Text(
-    "BIENVENIDO",
+Widget bienvenida(cred) {
+  return Text(
+    "¡Bienvenido " + cred + "!",
     style: TextStyle(
         color: Colors.blueGrey, fontSize: 35.0, fontWeight: FontWeight.bold),
   );

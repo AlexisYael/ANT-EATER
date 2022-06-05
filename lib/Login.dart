@@ -162,21 +162,22 @@ Widget botonEntrar(correoCtrl, passCtrl) {
               ),
             );
           } else {
-            String credencial = "";
+            String correo = "";
             String pass = "";
-
+            String usuario = "";
             await db.collection("usuarios").get().then((event) {
               for (var doc in event.docs) {
                 //print("${doc.id} => ${doc.data()}");
                 if (doc.get("correo") == correoCtrl.text) {
-                  credencial = doc.get("correo");
+                  correo = doc.get("correo");
                   pass = doc.get("pass");
+                  usuario = doc.get("nombre");
                   break;
                 }
               }
             });
 
-            if (credencial == "") {
+            if (correo == "") {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -211,7 +212,7 @@ Widget botonEntrar(correoCtrl, passCtrl) {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: ((context) => Welcome(credencial))));
+                      builder: ((context) => Welcome(usuario, correo))));
               //builder:
               //((context) => Ingresos());
             }

@@ -198,7 +198,7 @@ Widget botonCrearCuenta(
           backgroundColor: Colors.blueGrey,
           elevation: 15.0,
         ),
-        onPressed: () {
+        onPressed: () async {
           if (nombreController.text == "" ||
               edadController.text == "" ||
               correoController.text == "" ||
@@ -219,17 +219,49 @@ Widget botonCrearCuenta(
               ),
             );
           } else {
-            final user = <String, dynamic>{
-              "nombre": nombreController.text,
-              "edad": edadController.text,
-              "correo": correoController.text,
-              "pass": passController.text
-            };
-            db.collection("usuarios").add(user).then((DocumentReference doc) =>
-                print('DocumentSnapshot added with ID: ${doc.id}'));
+            bool existeCorreoReg = false;
+            //Funcion para que no haya correos repetidos registrados
+            await db.collection("usuarios").get().then((event) {
+              for (var doc in event.docs) {
+                if (doc.get("correo") == correoController.text) {
+                  existeCorreoReg = true;
+                  break; //sale del for
+                }
+              }
+            });
+            //TErmina funcion de usuarios repetidos
 
-            Navigator.push(context,
-                MaterialPageRoute(builder: ((context) => const Inicio())));
+            if (existeCorreoReg == false) {
+              final user = <String, dynamic>{
+                "nombre": nombreController.text,
+                "edad": edadController.text,
+                "correo": correoController.text,
+                "pass": passController.text
+              };
+              //Agrega el usuario a la BD
+              db.collection("usuarios").add(user).then(
+                  (DocumentReference doc) =>
+                      print('USUARIO added with ID: ${doc.id}'));
+
+              Navigator.push(context,
+                  MaterialPageRoute(builder: ((context) => const Inicio())));
+            } else {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("Atención"),
+                  content: Text(
+                      "El correo ingresado ya se encuentra registrado. Por favor, ingrese uno diferente."),
+                  actions: [
+                    FlatButton(
+                        child: Text("Ok"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
+              );
+            }
           }
         },
         child: const Text('Crear'),

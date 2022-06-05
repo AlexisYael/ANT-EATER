@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Egresos extends StatefulWidget {
-  const Egresos({Key? key}) : super(key: key);
+  //const Egresos({Key? key}) : super(key: key);
+  String usuario;
+  Egresos(this.usuario);
 
   @override
   State<Egresos> createState() => _EgresosState();
@@ -32,12 +34,14 @@ class _EgresosState extends State<Egresos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl),
+      body: cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl,
+          widget.usuario),
     );
   }
 }
 
-Widget cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
+Widget cuerpo(
+    eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl, usuario) {
   return Container(
     child: Center(
         child: ListView(
@@ -69,7 +73,8 @@ Widget cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
         const SizedBox(
           height: 15,
         ),
-        botonAgregar(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl),
+        botonAgregar(
+            eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl, usuario),
       ],
     )),
   );
@@ -205,7 +210,8 @@ Widget campoTotal(eg_total_Ctrl) {
   });
 }
 
-Widget botonAgregar(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
+Widget botonAgregar(
+    eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl, usuario) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return SizedBox(
       child: TextButton(
@@ -238,6 +244,7 @@ Widget botonAgregar(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl) {
             );
           } else {
             final egreso = <String, dynamic>{
+              "usuario": usuario,
               "descripcion": eg_desc_Ctrl.text,
               "cantidad": eg_cant_Ctrl.text,
               "precio": eg_prec_Ctrl.text,

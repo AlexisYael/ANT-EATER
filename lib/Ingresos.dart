@@ -7,9 +7,9 @@ import 'CreateUser.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 class Ingresos extends StatefulWidget {
-  //String usuario;
-  //Ingresos(this.usuario);
-  const Ingresos({Key? key}) : super(key: key);
+  String usuario;
+  Ingresos(this.usuario);
+  //const Ingresos({Key? key}) : super(key: key);
 
   @override
   State<Ingresos> createState() => _IngresosState();
@@ -27,11 +27,11 @@ class _IngresosState extends State<Ingresos> {
   @override
   Widget build(BuildContext context) {
     //return Scaffold(body: cuerpo(ingresoCtrl, widget.usuario));
-    return Scaffold(body: cuerpo(ingresoCtrl));
+    return Scaffold(body: cuerpo(ingresoCtrl, widget.usuario));
   }
 }
 
-Widget cuerpo(ingresoCtrl) {
+Widget cuerpo(ingresoCtrl, usuario) {
   return Container(
     child: Center(
         child: ListView(
@@ -47,7 +47,7 @@ Widget cuerpo(ingresoCtrl) {
         const SizedBox(
           height: 15,
         ),
-        botonAgregarIn(ingresoCtrl),
+        botonAgregarIn(ingresoCtrl, usuario),
       ],
     )),
   );
@@ -81,7 +81,7 @@ Widget campoIngreso(ingresoCtrl) {
   });
 }
 
-Widget botonAgregarIn(ingresoCtrl) {
+Widget botonAgregarIn(ingresoCtrl, usuario) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return SizedBox(
       child: TextButton(
@@ -110,7 +110,7 @@ Widget botonAgregarIn(ingresoCtrl) {
             );
           } else {
             final ingreso = <String, dynamic>{
-              //"usuario": usuario,
+              "usuario": usuario,
               "valor": ingresoCtrl.text
             };
             db.collection("ingresos").add(ingreso).then(
