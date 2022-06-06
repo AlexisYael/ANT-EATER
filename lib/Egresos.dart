@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, avoid_unnecessary_containers, sort_child_properties_last, no_leading_underscores_for_local_identifiers, unused_local_variable
 
+import 'dart:developer';
 import 'package:ant_eater/Ingresos.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +22,8 @@ class _EgresosState extends State<Egresos> {
   TextEditingController eg_cant_Ctrl = TextEditingController();
   TextEditingController eg_prec_Ctrl = TextEditingController();
   TextEditingController eg_total_Ctrl = TextEditingController();
+  //Crear variable donde indicará el valor actual DropDownButton
+  String dropDownCurrentValue = "Alimentos";
 
   @override
   void dispose() {
@@ -34,13 +37,100 @@ class _EgresosState extends State<Egresos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl,
-          widget.usuario),
-    );
+        //body: cuerpo(eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl,widget.usuario),
+        body: Container(
+      child: Center(
+          child: ListView(
+        children: <Widget>[
+          const SizedBox(
+            height: 100,
+          ),
+          titulo(),
+          const SizedBox(
+            height: 20,
+          ),
+//EMpieza codigo para dropdownbutton
+
+          DropdownButton(
+              items: [
+                'Alimentos',
+                'Gastos Escolares',
+                'Transporte',
+                'Servicios',
+                'Gastos Medicos',
+                'Entretenimiento',
+                'Otros'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              isExpanded: true,
+              dropdownColor: Colors.white,
+              //hint: Text(selectedValue),
+              icon: Icon(Icons.arrow_drop_down_circle_rounded),
+              value: dropDownCurrentValue,
+              onChanged: (String? valueIn) {
+                setState(() {
+                  dropDownCurrentValue = valueIn.toString();
+                });
+              }),
+//Termina codigo para dropdownButton
+          const SizedBox(
+            height: 15,
+          ),
+          campoDescripcion(eg_desc_Ctrl),
+          const SizedBox(
+            height: 15,
+          ),
+          campoCantidad(eg_cant_Ctrl),
+          const SizedBox(
+            height: 15,
+          ),
+          campoPrecio(eg_prec_Ctrl),
+          const SizedBox(
+            height: 15,
+          ),
+          campoTotal(eg_total_Ctrl),
+          const SizedBox(
+            height: 15,
+          ),
+          botonAgregar(dropDownCurrentValue, eg_desc_Ctrl, eg_cant_Ctrl,
+              eg_prec_Ctrl, eg_total_Ctrl, widget.usuario),
+        ],
+      )),
+
+/*
+          child: DropdownButton(
+              items: ["Opción 1", "Opción 2", "Opción 3"]
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              isExpanded: true,
+              dropdownColor: Colors.white,
+              //hint: Text(selectedValue),
+              icon: Icon(Icons.arrow_drop_down_circle_rounded),
+              value: dropDownCurrentValue,
+              onChanged: (String? valueIn) {
+                setState(() {
+                  dropDownCurrentValue = valueIn.toString();
+                });
+              }),
+*/
+    ));
   }
 }
 
-Widget cuerpo(
+//WIDGET CUERPO ORIGINAL
+/*Widget cuerpo(
     eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl, usuario) {
   return Container(
     child: Center(
@@ -53,7 +143,11 @@ Widget cuerpo(
         const SizedBox(
           height: 20,
         ),
-        categoria(),
+//EMpieza codigo para dropdownbutton
+
+        //   categoria(),
+
+//Termina codigo para dropdownButton
         const SizedBox(
           height: 15,
         ),
@@ -78,7 +172,7 @@ Widget cuerpo(
       ],
     )),
   );
-}
+}*/
 
 Widget titulo() {
   return const Center(
@@ -90,7 +184,8 @@ Widget titulo() {
   );
 }
 
-Widget categoria() {
+//DROPDOWNBUTTON ORIGINAL
+/*Widget categoria() {
   String selectedValue = "Seleccione una categoría:";
   return Container(
     decoration: BoxDecoration(
@@ -98,7 +193,7 @@ Widget categoria() {
       border: Border.all(color: Colors.black, width: 4),
     ),
     child: DropdownButton(
-      items: const [
+      items: [
         DropdownMenuItem<String>(
           child: Text("Alimentos"),
           value: "Alimentos",
@@ -128,7 +223,9 @@ Widget categoria() {
           value: "Otros",
         ),
       ],
-      onChanged: (value) {},
+      onChanged: (value) {
+        selectedValue = value.toString();
+      },
       isExpanded: true,
       dropdownColor: Colors.white,
       hint: Text(selectedValue),
@@ -136,7 +233,7 @@ Widget categoria() {
       //value: selectedValue,
     ),
   );
-}
+}*/
 
 Widget campoDescripcion(eg_desc_Ctrl) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -210,8 +307,8 @@ Widget campoTotal(eg_total_Ctrl) {
   });
 }
 
-Widget botonAgregar(
-    eg_desc_Ctrl, eg_cant_Ctrl, eg_prec_Ctrl, eg_total_Ctrl, usuario) {
+Widget botonAgregar(dropDownCurrentValue, eg_desc_Ctrl, eg_cant_Ctrl,
+    eg_prec_Ctrl, eg_total_Ctrl, usuario) {
   return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
     return SizedBox(
       child: TextButton(
@@ -245,6 +342,7 @@ Widget botonAgregar(
           } else {
             final egreso = <String, dynamic>{
               "usuario": usuario,
+              "categoría": dropDownCurrentValue,
               "descripcion": eg_desc_Ctrl.text,
               "cantidad": eg_cant_Ctrl.text,
               "precio": eg_prec_Ctrl.text,
